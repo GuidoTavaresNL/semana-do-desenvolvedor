@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana do Desenvolvedor AWS – Escola da Nuvem</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--aws-orange:#FF9900;--aws-dark:#232F3E;--bg:#F4F6F9;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--border:#e5e7eb;--code-bg:#1e2330;--code-text:#e2e8f0;--day1:#FF9900;--day2:#00A1C9;--day3:#7B2FBE;--day4:#1D8348}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.hero{background:var(--aws-dark);color:#fff;padding:3rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(255,153,0,.15),transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(0,161,201,.12),transparent 60%)}
+.hero-badge{display:inline-block;background:rgba(255,153,0,.2);border:1px solid rgba(255,153,0,.4);color:var(--aws-orange);font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1rem;position:relative}
+.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;margin-bottom:.5rem;position:relative}
+.hero h1 span{color:var(--aws-orange)}
+.hero p{font-size:1rem;color:rgba(255,255,255,.65);max-width:600px;margin:0 auto 2rem;position:relative}
+.service-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;position:relative}
+.pill{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.8);font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;text-decoration:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.pill:hover{background:rgba(255,153,0,.25);border-color:rgba(255,153,0,.6);color:#FFB84D;transform:translateY(-1px)}
+.progress-nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 2rem;display:flex;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.nav-tab{padding:14px 20px;font-size:13px;font-weight:500;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:all .2s;border:none;background:none;display:flex;align-items:center;gap:8px}
+.nav-tab:hover{color:var(--text)}
+.nav-tab[data-day="1"].active{border-bottom-color:var(--day1);color:var(--day1)}
+.nav-tab[data-day="2"].active{border-bottom-color:var(--day2);color:var(--day2)}
+.nav-tab[data-day="3"].active{border-bottom-color:var(--day3);color:var(--day3)}
+.nav-tab[data-day="4"].active{border-bottom-color:var(--day4);color:var(--day4)}
+.nav-dot{width:8px;height:8px;border-radius:50%}
+.main{max-width:1000px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.day-section{display:none}
+.day-section.active{display:block}
+.day-header{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;padding:1.5rem;border-radius:16px;color:#fff}
+.day-header.d1{background:linear-gradient(135deg,#b86e00,var(--day1))}
+.day-header.d2{background:linear-gradient(135deg,#006f8a,var(--day2))}
+.day-header.d3{background:linear-gradient(135deg,#4a1880,var(--day3))}
+.day-header.d4{background:linear-gradient(135deg,#0f4a22,var(--day4))}
+.day-num{font-size:3rem;font-weight:700;opacity:.3;line-height:1}
+.day-info h2{font-size:1.3rem;font-weight:700}
+.day-info p{font-size:.9rem;opacity:.85;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem}
+.card h3{font-size:1rem;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
+.card-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.obj-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.obj-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.5}
+.obj-list li::before{content:'✓';font-size:11px;font-weight:700;color:#fff;background:#22c55e;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-top:8px}
+.res-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px}
+.res-item .res-type{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;opacity:.6;margin-bottom:2px}
+.res-item .res-name{font-weight:500;font-family:'JetBrains Mono',monospace}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:1rem;padding-bottom:1rem;position:relative}
+.step:not(:last-child)::before{content:'';position:absolute;left:15px;top:32px;bottom:0;width:2px;background:var(--border)}
+.step-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;z-index:1}
+.step-body{flex:1;padding-top:5px}
+.step-body strong{font-size:14px;display:block;margin-bottom:3px}
+.step-body p{font-size:13px;color:var(--muted);line-height:1.5}
+.code-block{background:var(--code-bg);border-radius:10px;overflow:hidden;margin:10px 0}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)}
+.code-lang{font-size:11px;color:var(--aws-orange);font-weight:600;font-family:'JetBrains Mono',monospace}
+.copy-btn{font-size:11px;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:2px 8px;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.copy-btn:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+.copy-btn.copied{color:#4ade80;border-color:#4ade80}
+pre{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--code-text);overflow-x:auto;line-height:1.7;white-space:pre}
+.arch-diagram{background:var(--code-bg);border-radius:12px;padding:1.5rem;overflow-x:auto}
+.arch-row{display:flex;align-items:center;gap:8px;margin:6px 0;flex-wrap:wrap}
+.arch-service{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.9);font-size:11px;font-weight:500;padding:5px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.arch-arrow{color:rgba(255,153,0,.7);font-size:14px}
+.arch-label{color:rgba(255,255,255,.4);font-size:10px}
+.alert{border-radius:8px;padding:12px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start;margin:10px 0}
+.alert.warn{background:#fff8e6;border:1px solid #ffd166;color:#7a4f00}
+.alert.info{background:#e8f4fd;border:1px solid #90caf9;color:#1a5276}
+.alert.success{background:#e8f5e9;border:1px solid #a5d6a7;color:#1b5e20}
+.alert.danger{background:#fdecea;border:1px solid #f5c6cb;color:#721c24}
+.alert-icon{font-size:16px;flex-shrink:0}
+.conclusion{background:linear-gradient(135deg,#232F3E,#37475A);color:#fff;border-radius:12px;padding:1.5rem;margin-top:1.5rem}
+.conclusion h3{font-size:1rem;color:var(--aws-orange);margin-bottom:8px}
+.conclusion ul{padding-left:1.2rem;font-size:13px;line-height:1.8;opacity:.9}
+.section-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:1.5rem 0 .75rem;padding-left:4px}
+.env-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;margin-top:8px}
+.env-item{background:var(--code-bg);border-radius:8px;padding:10px 14px;display:flex;flex-direction:column;gap:2px}
+.env-key{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--aws-orange);font-weight:600}
+.env-val{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.7)}
+@media(max-width:600px){.hero{padding:2rem 1rem 2.5rem}.day-header{flex-direction:column;text-align:center}.day-num{font-size:2rem}.res-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-badge">Escola da Nuvem</div>
+  <h1>Semana do <span>Desenvolvedor AWS</span></h1>
+  <p>Laboratório completo de 4 dias — AWS Developer Associate — Arquitetura serverless orientada a eventos</p>
+  <div class="service-pills">
+    <a class="pill" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html" target="_blank">🌐 API Gateway</a>
+    <a class="pill" href="https://docs.aws.amazon.com/lambda/latest/dg/welcome.html" target="_blank">⚡ Lambda</a>
+    <a class="pill" href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html" target="_blank">📨 SQS FIFO</a>
+    <a class="pill" href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html" target="_blank">🔀 EventBridge</a>
+    <a class="pill" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html" target="_blank">🪣 S3</a>
+    <a class="pill" href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html" target="_blank">🗄️ DynamoDB</a>
+    <a class="pill" href="https://docs.aws.amazon.com/sns/latest/dg/welcome.html" target="_blank">📣 SNS</a>
+    <a class="pill" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html" target="_blank">🔐 IAM</a>
+    <a class="pill" href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html" target="_blank">📊 CloudWatch</a>
+  </div>
+</div>
+
+<nav class="progress-nav">
+  <button class="nav-tab active" data-day="1" onclick="showDay(1,this)"><span class="nav-dot" style="background:#FF9900"></span>Dia 1 – API & EventBridge</button>
+  <button class="nav-tab" data-day="2" onclick="showDay(2,this)"><span class="nav-dot" style="background:#00A1C9"></span>Dia 2 – S3 & Rastreamento</button>
+  <button class="nav-tab" data-day="3" onclick="showDay(3,this)"><span class="nav-dot" style="background:#7B2FBE"></span>Dia 3 – Processamento Central</button>
+  <button class="nav-tab" data-day="4" onclick="showDay(4,this)"><span class="nav-dot" style="background:#1D8348"></span>Dia 4 – DLQs & Fluxos Extras</button>
+</nav>
+
+<div class="main">
+
+<!-- ============================== DIA 1 ============================== -->
+<div class="day-section active" id="day1">
+  <div class="day-header d1">
+    <div class="day-num">01</div>
+    <div class="day-info">
+      <h2>Ingestão de Pedidos via API e EventBridge</h2>
+      <p>API Gateway → Lambda pré-validação → SQS FIFO → Lambda validação → EventBridge</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">📋</span> Visão Geral</h3>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:12px">Este laboratório marca o início da semana do desenvolvedor AWS da Escola da Nuvem, voltada para alunos do curso AWS Developer Associate. Construiremos o fluxo inicial para ingestão de pedidos com um endpoint API REST que recebe dados, passa por pré-validação, é enfileirado em SQS FIFO e processado por uma segunda Lambda que publica eventos no EventBridge.</p>
+    <div class="arch-diagram">
+      <div class="arch-row"><span class="arch-service">API Gateway</span><span class="arch-arrow">→</span><span class="arch-service">pre-validacao-lambda</span><span class="arch-arrow">→</span><span class="arch-service">SQS FIFO</span><span class="arch-arrow">→</span><span class="arch-service">validacao-pedidos-lambda</span><span class="arch-arrow">→</span><span class="arch-service">EventBridge</span></div>
+      <div class="arch-row"><span class="arch-label">DLQ: pedidos-fifo-dlq.fifo ← falhas após 3 tentativas</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">✅</span> Objetivos</h3>
+    <ul class="obj-list">
+      <li>Um endpoint API funcional para receber pedidos</li>
+      <li>Duas funções Lambda para validação em cascata</li>
+      <li>Uma fila SQS FIFO para garantir ordem de processamento</li>
+      <li>Um barramento de eventos customizado no EventBridge</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e3f2fd">🗂</span> Recursos a Criar</h3>
+    <div class="alert warn"><span class="alert-icon">⚠️</span><span>Substitua <strong>seu-nome</strong> em <u>todos</u> os recursos por um identificador único (ex: <code>joaosilva</code>). Trabalhe sempre na mesma região AWS.</span></div>
+    <div class="res-grid">
+      <div class="res-item"><div class="res-type">IAM Role</div><div class="res-name">lambda-prevalidacao-role-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">IAM Role</div><div class="res-name">lambda-validacao-pedidos-role-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SQS FIFO DLQ</div><div class="res-name">pedidos-fifo-dlq-seu-nome.fifo</div></div>
+      <div class="res-item"><div class="res-type">SQS FIFO Queue</div><div class="res-name">pedidos-fifo-queue-seu-nome.fifo</div></div>
+      <div class="res-item"><div class="res-type">Lambda</div><div class="res-name">pre-validacao-lambda-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">API Gateway (REST)</div><div class="res-name">pedidos-api-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">EventBridge Bus</div><div class="res-name">pedidos-event-bus-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">Lambda</div><div class="res-name">validacao-pedidos-lambda-seu-nome</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e0f2f1">🔐</span> IAM Role – Pré-Validação</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#FF9900">1</div><div class="step-body"><strong>IAM → Roles → Create role</strong><p>Trusted entity type: AWS service → Use case: Lambda → Next</p></div></div>
+      <div class="step"><div class="step-num" style="background:#FF9900">2</div><div class="step-body"><strong>Adicionar política</strong><p>Procure e marque <code>AWSLambdaBasicExecutionRole</code> → Next</p></div></div>
+      <div class="step"><div class="step-num" style="background:#FF9900">3</div><div class="step-body"><strong>Nome da role</strong><p><code>lambda-prevalidacao-role-seu-nome</code> → Create role</p></div></div>
+    </div>
+    <p class="section-label">Política inline – Permissão SQS SendMessage</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:6px">Após criar a fila SQS, volte a esta role → Add permissions → Create inline policy → JSON:</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – SQSSendMessageToPedidosFIFO-seu-nome</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "sqs:SendMessage",
+      "Resource": "arn:aws:sqs:REGION:ACCOUNT_ID:pedidos-fifo-queue-seu-nome.fifo"
+    }
+  ]
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e0f2f1">🔐</span> IAM Role – Validação de Pedidos</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Crie da mesma forma com nome <code>lambda-validacao-pedidos-role-seu-nome</code>. Após criar a SQS FIFO e o EventBridge Bus, adicione a política inline abaixo:</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – SQSReadEventBridgePutPolicy-seu-nome</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes"
+      ],
+      "Resource": "COLE AQUI O ARN DA SUA FILA PRINCIPAL FIFO"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "events:PutEvents",
+      "Resource": "COLE AQUI O ARN DO SEU EVENT BUS"
+    }
+  ]
+}</pre>
+    </div>
+    <div class="alert info"><span class="alert-icon">ℹ️</span><span>Se der erro ao colar, verifique se não há espaços extras entre as aspas dos ARNs.</span></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">📨</span> Amazon SQS FIFO</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#FF9900">1</div><div class="step-body"><strong>Criar DLQ FIFO</strong><p>SQS → Create queue → Type: FIFO → Name: <code>pedidos-fifo-dlq-seu-nome.fifo</code> → Create queue → <strong>Anote o ARN</strong></p></div></div>
+      <div class="step"><div class="step-num" style="background:#FF9900">2</div><div class="step-body"><strong>Criar Fila Principal FIFO</strong><p>Name: <code>pedidos-fifo-queue-seu-nome.fifo</code> → Dead-letter queue: Enabled → ARN da DLQ → Maximum receives: <strong>3</strong> → Create queue → <strong>Anote ARN e URL</strong></p></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">⚡</span> Lambda – Pré-Validação</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Function name: <code>pre-validacao-lambda-seu-nome</code> | Runtime: Python 3.12 | Role: lambda-prevalidacao-role-seu-nome</p>
+    <p class="section-label">Variável de ambiente</p>
+    <div class="env-grid"><div class="env-item"><div class="env-key">SQS_QUEUE_URL</div><div class="env-val">URL da fila pedidos-fifo-queue-seu-nome.fifo</div></div></div>
+    <p class="section-label">Código – lambda_function.py</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">python – pre-validacao-lambda</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>import json
+import os
+import boto3
+
+SQS_QUEUE_URL = os.environ['SQS_QUEUE_URL']
+sqs = boto3.client('sqs')
+
+def lambda_handler(event, context):
+    print(f"Evento recebido do API Gateway: {event}")
+    try:
+        body_str = event.get('body', '{}')
+        if not body_str:
+            body_str = '{}'
+        body = json.loads(body_str)
+        pedido_id = body.get('pedidoId')
+        cliente_id = body.get('clienteId')
+
+        if not pedido_id or not cliente_id:
+            print("Erro: pedidoId ou clienteId ausente.")
+            return {
+                'statusCode': 400,
+                'headers': {'Content-Type': 'application/json'},
+                'body': json.dumps({'message': 'pedidoId e clienteId são obrigatórios'})
+            }
+
+        response = sqs.send_message(
+            QueueUrl=SQS_QUEUE_URL,
+            MessageBody=json.dumps(body),
+            MessageGroupId=str(pedido_id),
+            MessageDeduplicationId=str(context.aws_request_id)
+        )
+        print(f"Mensagem enviada para SQS: {response['MessageId']}")
+        return {
+            'statusCode': 200,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'message': 'Pedido recebido e enfileirado', 'sqsMessageId': response['MessageId']})
+        }
+
+    except json.JSONDecodeError:
+        print("Erro: Corpo da requisição não é um JSON válido.")
+        return {
+            'statusCode': 400,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'message': 'Corpo da requisição inválido, não é um JSON válido'})
+        }
+    except Exception as e:
+        print(f"Erro inesperado: {str(e)}")
+        return {
+            'statusCode': 500,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'message': f'Erro interno do servidor: {str(e)}'})
+        }</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#f3e5f5">🌐</span> API Gateway</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#FF9900">1</div><div class="step-body"><strong>Criar REST API</strong><p>API Gateway → Create API → REST API → Build → New API → Name: <code>pedidos-api-seu-nome</code> → Endpoint Type: Regional → Create API</p></div></div>
+      <div class="step"><div class="step-num" style="background:#FF9900">2</div><div class="step-body"><strong>Criar Resource /pedidos</strong><p>Resources → Create Resource → Resource Name: <code>pedidos</code> → Create Resource</p></div></div>
+      <div class="step"><div class="step-num" style="background:#FF9900">3</div><div class="step-body"><strong>Criar Método POST</strong><p>Com /pedidos selecionado → Create Method → Method type: POST → Integration type: Lambda Function → Use Lambda Proxy integration ✓ → selecione <code>pre-validacao-lambda-seu-nome</code> → Create method</p></div></div>
+      <div class="step"><div class="step-num" style="background:#FF9900">4</div><div class="step-body"><strong>Deploy da API</strong><p>Deploy API → New Stage → Stage name: <code>dev</code> → Deploy → <strong>Anote a Invoke URL</strong></p></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">🧪</span> Teste Inicial – API → Lambda → SQS</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">bash – curl – teste da API</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>curl -X POST https://&lt;INVOKE_URL&gt;/pedidos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pedidoId": "lab001-seu-nome",
+    "clienteId": "clienteXYZ-seu-nome",
+    "itens": [
+      {"produto": "Caneta Azul", "quantidade": 10},
+      {"produto": "Caderno Universitário", "quantidade": 2}
+    ]
+  }'</pre>
+    </div>
+    <div class="alert success"><span class="alert-icon">✅</span><span>Resposta esperada: HTTP 200 com <code>{"message": "Pedido recebido e enfileirado", "sqsMessageId": "..."}</code></span></div>
+    <div class="alert info"><span class="alert-icon">ℹ️</span><span>No Windows use Git Bash, PowerShell, WSL ou CloudShell. No Linux/macOS use o terminal nativo.</span></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f4fd">🔀</span> Amazon EventBridge – Custom Event Bus</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#FF9900">1</div><div class="step-body"><strong>EventBridge → Event buses → Create event bus</strong><p>Name: <code>pedidos-event-bus-seu-nome</code> → Create → <strong>Anote o ARN</strong></p></div></div>
+      <div class="step"><div class="step-num" style="background:#FF9900">2</div><div class="step-body"><strong>Voltar ao IAM</strong><p>Adicione a política inline <code>SQSReadEventBridgePutPolicy-seu-nome</code> à role <code>lambda-validacao-pedidos-role-seu-nome</code> (JSON já mostrado acima).</p></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">⚡</span> Lambda – Validação de Pedidos</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Function name: <code>validacao-pedidos-lambda-seu-nome</code> | Runtime: Python 3.12 | Role: lambda-validacao-pedidos-role-seu-nome</p>
+    <p class="section-label">Variável de ambiente</p>
+    <div class="env-grid"><div class="env-item"><div class="env-key">EVENT_BUS_NAME</div><div class="env-val">pedidos-event-bus-seu-nome</div></div></div>
+    <p class="section-label">Trigger SQS</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Configuration → Triggers → Add trigger → SQS → fila: <code>pedidos-fifo-queue-seu-nome.fifo</code> → Batch size: <strong>1</strong> → Add</p>
+    <p class="section-label">Código – lambda_function.py</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">python – validacao-pedidos-lambda</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>import json
+import os
+import boto3
+from datetime import datetime
+
+EVENT_BUS_NAME = os.environ['EVENT_BUS_NAME']
+event_bridge = boto3.client('events')
+
+def lambda_handler(event, context):
+    print(f"Evento SQS recebido: {event}")
+    for record in event['Records']:
+        try:
+            pedido_data_str = record['body']
+            pedido_data = json.loads(pedido_data_str)
+            print(f"Processando pedido do SQS: {pedido_data}")
+
+            if not pedido_data.get('itens') or not isinstance(pedido_data.get('itens'), list) or len(pedido_data.get('itens')) == 0:
+                print(f"Erro de validação: Pedido {pedido_data.get('pedidoId')} não possui 'itens' válidos.")
+                continue
+
+            print(f"Pedido {pedido_data.get('pedidoId')} validado com sucesso.")
+            if 'timestamp' not in pedido_data:
+                pedido_data['timestamp'] = datetime.utcnow().isoformat() + "Z"
+
+            response = event_bridge.put_events(
+                Entries=[{
+                    'Source': 'lab.aula1.pedidos.validacao',
+                    'DetailType': 'NovoPedidoValidado',
+                    'Detail': json.dumps(pedido_data),
+                    'EventBusName': EVENT_BUS_NAME
+                }]
+            )
+            print(f"Evento publicado no EventBridge: {response}")
+
+        except json.JSONDecodeError as je:
+            print(f"Erro de JSON ao processar registro {record['messageId']}: {str(je)}")
+            raise je
+        except Exception as e:
+            print(f"Erro geral ao processar registro {record['messageId']}: {str(e)}")
+            raise e
+
+    return {'statusCode': 200, 'body': 'Processamento de mensagens SQS concluído'}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">🧪</span> Teste Completo do Fluxo – Dia 1</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">bash – curl – teste completo</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>curl -X POST &lt;INVOKE_URL&gt;/pedidos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pedidoId": "lab001-seu-nome",
+    "clienteId": "clienteABC-seu-nome",
+    "itens": [
+      {"produto": "Borracha Branca", "quantidade": 5}
+    ]
+  }'</pre>
+    </div>
+    <p class="section-label">Verificações</p>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#FF9900">1</div><div class="step-body"><strong>CloudWatch – pre-validacao-lambda</strong><p>Log groups → /aws/lambda/pre-validacao-lambda-seu-nome → ver "Evento recebido do API Gateway" e "Mensagem enviada para SQS"</p></div></div>
+      <div class="step"><div class="step-num" style="background:#FF9900">2</div><div class="step-body"><strong>CloudWatch – validacao-pedidos-lambda</strong><p>Deve mostrar: "Evento SQS recebido", "Pedido X validado com sucesso", "Evento publicado no EventBridge"</p></div></div>
+      <div class="step"><div class="step-num" style="background:#FF9900">3</div><div class="step-body"><strong>EventBridge Monitoring</strong><p>EventBridge → Event buses → pedidos-event-bus-seu-nome → aba Monitoring → métrica PutEvents_Invocations</p></div></div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h3>✨ Conclusão do Dia 1</h3>
+    <ul>
+      <li>Criar e configurar IAM Roles com permissões granulares</li>
+      <li>Configurar filas SQS FIFO com Dead Letter Queues</li>
+      <li>Desenvolver funções Lambda em Python para processamento</li>
+      <li>Expor Lambdas como endpoints REST com API Gateway</li>
+      <li>Publicar eventos customizados no Amazon EventBridge</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================== DIA 2 ============================== -->
+<div class="day-section" id="day2">
+  <div class="day-header d2">
+    <div class="day-num">02</div>
+    <div class="day-info">
+      <h2>Ingestão de Arquivos via S3, Rastreamento e Integração</h2>
+      <p>S3 → SQS Standard → Lambda → DynamoDB + SNS + SQS FIFO (pipeline principal Dia 1)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e3f2fd">📐</span> Arquitetura do Dia 2</h3>
+    <div class="arch-diagram">
+      <div class="arch-row"><span class="arch-service">S3 Bucket</span><span class="arch-arrow">→</span><span class="arch-service">Event Notification</span><span class="arch-arrow">→</span><span class="arch-service">s3-arquivos-json-queue</span><span class="arch-arrow">→</span><span class="arch-service">validacao-s3-arquivos-lambda</span></div>
+      <div class="arch-row" style="padding-left:40px"><span class="arch-arrow">↓ válido</span><span class="arch-service" style="margin-left:8px">pedidos-fifo-queue (Dia 1)</span></div>
+      <div class="arch-row" style="padding-left:40px"><span class="arch-arrow">↓ sempre</span><span class="arch-service" style="margin-left:8px">DynamoDB controle-arquivos-historico</span></div>
+      <div class="arch-row" style="padding-left:40px"><span class="arch-arrow">↓ erro</span><span class="arch-service" style="margin-left:8px">SNS notificacao-erro-arquivos</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">✅</span> Objetivos</h3>
+    <ul class="obj-list">
+      <li>Bucket S3 configurado para receber arquivos JSON de pedidos</li>
+      <li>Filas SQS Standard para desacoplar o processamento de arquivos</li>
+      <li>Lambda para validar JSONs do S3 e reenviar ao pipeline principal</li>
+      <li>Tabela DynamoDB para rastrear histórico de validação de arquivos</li>
+      <li>Tópico SNS para notificações de erro via e-mail</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e3f2fd">🗂</span> Recursos a Criar</h3>
+    <div class="res-grid">
+      <div class="res-item"><div class="res-type">IAM Role</div><div class="res-name">lambda-s3-validation-role-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">S3 Bucket</div><div class="res-name">datalake-arquivos-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SQS DLQ Standard</div><div class="res-name">s3-arquivos-json-dlq-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SQS Queue Standard</div><div class="res-name">s3-arquivos-json-queue-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">Lambda</div><div class="res-name">validacao-s3-arquivos-lambda-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">DynamoDB</div><div class="res-name">controle-arquivos-historico-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SNS Topic</div><div class="res-name">notificacao-erro-arquivos-seu-nome</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e0f2f1">🔐</span> IAM Role – Validação S3</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Crie com nome <code>lambda-s3-validation-role-seu-nome</code> com política <code>AWSLambdaBasicExecutionRole</code>. Após criar os demais recursos, adicione a inline policy abaixo:</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – Permissão inicial SQS trigger (SQSReadFromArquivosJsonQueueTrigger-seu-nome)</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes"
+      ],
+      "Resource": "COLE AQUI O ARN DA SUA FILA s3-arquivos-json-queue-seu-nome"
+    }
+  ]
+}</pre>
+    </div>
+    <p class="section-label">Política completa (S3ReadSQSProcessDynamoSNSSQSFiFOPermissions-seu-nome)</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – Permissões completas da role</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::datalake-arquivos-seu-nome/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "dynamodb:PutItem",
+      "Resource": "COLE AQUI O ARN DA SUA TABELA controle-arquivos-historico-seu-nome"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "sns:Publish",
+      "Resource": "COLE AQUI O ARN DO SEU SNS notificacao-erro-arquivos-seu-nome"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "sqs:SendMessage",
+      "Resource": "COLE AQUI O ARN DA SUA FILA pedidos-fifo-queue-seu-nome.fifo"
+    }
+  ]
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">📨</span> SQS Standard – Arquivos S3</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#00A1C9">1</div><div class="step-body"><strong>Criar DLQ Standard</strong><p>Type: Standard → Name: <code>s3-arquivos-json-dlq-seu-nome</code> → Create queue → <strong>Anote o ARN</strong></p></div></div>
+      <div class="step"><div class="step-num" style="background:#00A1C9">2</div><div class="step-body"><strong>Criar Fila Principal Standard</strong><p>Type: Standard → Name: <code>s3-arquivos-json-queue-seu-nome</code> → Visibility timeout: 30s → DLQ: Enabled → ARN da DLQ → Max receives: 3 → Create queue → <strong>Anote ARN e URL</strong></p></div></div>
+    </div>
+    <div class="alert warn"><span class="alert-icon">⚠️</span><span>O Visibility timeout da fila precisa ser maior ou igual ao Timeout da Lambda. Ajuste para <strong>60 segundos</strong> se aparecer erro ao adicionar o trigger.</span></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fce4ec">🗄️</span> DynamoDB – controle-arquivos-historico</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#00A1C9">1</div><div class="step-body"><strong>DynamoDB → Tables → Create table</strong><p>Table name: <code>controle-arquivos-historico-seu-nome</code> → Partition key: <code>nomeArquivo</code> (String) → Create table → <strong>Anote o ARN</strong></p></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#f1f8e9">📣</span> SNS – Notificação de Erros</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#00A1C9">1</div><div class="step-body"><strong>SNS → Topics → Create topic</strong><p>Type: Standard → Name: <code>notificacao-erro-arquivos-seu-nome</code> → Create topic → <strong>Anote o ARN</strong></p></div></div>
+      <div class="step"><div class="step-num" style="background:#00A1C9">2</div><div class="step-body"><strong>Criar Subscrição de E-mail</strong><p>Subscriptions → Create subscription → Protocol: Email → Endpoint: seu e-mail → Create subscription → <strong>Confirme o e-mail recebido da AWS</strong></p></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">⚡</span> Lambda – Validação S3</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Function name: <code>validacao-s3-arquivos-lambda-seu-nome</code> | Runtime: Python 3.12 | Timeout: 60s</p>
+    <p class="section-label">Variáveis de ambiente</p>
+    <div class="env-grid">
+      <div class="env-item"><div class="env-key">DYNAMODB_TABLE_NAME</div><div class="env-val">controle-arquivos-historico-seu-nome</div></div>
+      <div class="env-item"><div class="env-key">SNS_TOPIC_ARN</div><div class="env-val">ARN do tópico notificacao-erro-arquivos</div></div>
+      <div class="env-item"><div class="env-key">SQS_FIFO_PEDIDOS_URL</div><div class="env-val">URL da fila pedidos-fifo-queue-seu-nome.fifo (Dia 1)</div></div>
+    </div>
+    <p class="section-label">Trigger SQS</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Configuration → Triggers → Add trigger → SQS → <code>s3-arquivos-json-queue-seu-nome</code> → Batch size: 1 → Add</p>
+    <p class="section-label">Código – lambda_function.py</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">python – validacao-s3-arquivos-lambda</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>import json
+import os
+import boto3
+from datetime import datetime
+import urllib.parse
+import uuid
+
+DYNAMODB_TABLE_NAME = os.environ['DYNAMODB_TABLE_NAME']
+SNS_TOPIC_ARN = os.environ['SNS_TOPIC_ARN']
+SQS_FIFO_PEDIDOS_URL = os.environ['SQS_FIFO_PEDIDOS_URL']
+
+s3 = boto3.client('s3')
+dynamodb = boto3.resource('dynamodb')
+sns = boto3.client('sns')
+sqs = boto3.client('sqs')
+table = dynamodb.Table(DYNAMODB_TABLE_NAME)
+
+def lambda_handler(event, context):
+    print(f"Evento SQS (arquivos) recebido: {event}")
+    for record in event['Records']:
+        s3_event_message_body = record['body']
+        object_key = None
+        bucket_name = None
+        try:
+            s3_event_message = json.loads(s3_event_message_body)
+            if 'Message' in s3_event_message and isinstance(s3_event_message['Message'], str):
+                s3_notification = json.loads(s3_event_message['Message'])
+            else:
+                s3_notification = s3_event_message
+
+            for s3_record in s3_notification['Records']:
+                bucket_name = s3_record['s3']['bucket']['name']
+                object_key_encoded = s3_record['s3']['object']['key']
+                object_key = urllib.parse.unquote_plus(object_key_encoded)
+                print(f"Processando arquivo: s3://{bucket_name}/{object_key}")
+
+                s3_object = s3.get_object(Bucket=bucket_name, Key=object_key)
+                file_content = s3_object['Body'].read().decode('utf-8')
+
+                status_validacao_arquivo = "ERRO_VALIDACAO_ARQUIVO"
+                detalhes_erro_arquivo = "Conteúdo do arquivo não é JSON válido."
+                arquivo_data = None
+
+                try:
+                    arquivo_data = json.loads(file_content)
+                    if isinstance(arquivo_data, dict) and 'lista_pedidos' in arquivo_data and isinstance(arquivo_data['lista_pedidos'], list):
+                        status_validacao_arquivo = "ARQUIVO_VALIDADO"
+                        detalhes_erro_arquivo = None
+                        print(f"Schema do arquivo {object_key} validado.")
+
+                        for pedido_item in arquivo_data['lista_pedidos']:
+                            if 'id_pedido_arquivo' not in pedido_item or 'id_cliente_arquivo' not in pedido_item:
+                                print(f"Pedido inválido no arquivo {object_key}: {pedido_item}.")
+                                continue
+
+                            pedido_formatado = {
+                                'pedidoId': str(pedido_item.get('id_pedido_arquivo')),
+                                'clienteId': str(pedido_item.get('id_cliente_arquivo')),
+                                'itens': pedido_item.get('itens_pedido_arquivo', []),
+                                'origem': 'S3_FILE',
+                                'nomeArquivoOriginal': object_key,
+                                'timestamp_extracao_arquivo': datetime.utcnow().isoformat() + "Z"
+                            }
+                            try:
+                                deduplication_id = f"{object_key}-{pedido_formatado['pedidoId']}-{uuid.uuid4()}"
+                                sqs.send_message(
+                                    QueueUrl=SQS_FIFO_PEDIDOS_URL,
+                                    MessageBody=json.dumps(pedido_formatado),
+                                    MessageGroupId=str(pedido_formatado['pedidoId']),
+                                    MessageDeduplicationId=deduplication_id
+                                )
+                                print(f"Pedido {pedido_formatado['pedidoId']} enviado para SQS FIFO Pedidos.")
+                            except Exception as sqs_e:
+                                print(f"Erro ao enviar pedido para SQS FIFO: {str(sqs_e)}")
+                    else:
+                        detalhes_erro_arquivo = "Schema inválido. Esperada chave 'lista_pedidos' contendo uma lista."
+                        print(detalhes_erro_arquivo)
+
+                except json.JSONDecodeError as je:
+                    print(f"Arquivo {object_key} não é um JSON válido: {str(je)}")
+
+                item_to_put = {
+                    'nomeArquivo': object_key,
+                    'timestamp': datetime.utcnow().isoformat() + "Z",
+                    'statusValidacao': status_validacao_arquivo,
+                    'bucket': bucket_name
+                }
+                if detalhes_erro_arquivo:
+                    item_to_put['detalhesErro'] = detalhes_erro_arquivo
+                table.put_item(Item=item_to_put)
+
+                if status_validacao_arquivo != "ARQUIVO_VALIDADO":
+                    message_sns = f"Erro de validação no ARQUIVO: {object_key} do bucket {bucket_name}.\n"
+                    message_sns += f"Status: {status_validacao_arquivo}\n"
+                    if detalhes_erro_arquivo:
+                        message_sns += f"Detalhes: {detalhes_erro_arquivo}"
+                    sns.publish(TopicArn=SNS_TOPIC_ARN, Message=message_sns,
+                                Subject=f"Erro de Validação de ARQUIVO S3 - {object_key}")
+                    print(f"Notificação de erro enviada para SNS para {object_key}")
+
+        except Exception as e:
+            err_msg = f"Erro crítico ao processar SQS record: {str(e)}"
+            print(err_msg)
+            try:
+                sns.publish(TopicArn=SNS_TOPIC_ARN, Message=err_msg,
+                            Subject="Erro Crítico no Processamento de Arquivo S3")
+            except Exception as sns_e:
+                print(f"Falha ao enviar notificação SNS: {str(sns_e)}")
+            raise e
+
+    return {'statusCode': 200, 'body': 'Processamento de arquivos S3 concluído'}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff8e1">🪣</span> S3 Bucket e Event Notification</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#00A1C9">1</div><div class="step-body"><strong>Criar Bucket S3</strong><p>S3 → Create bucket → Name: <code>datalake-arquivos-seu-nome</code> (deve ser globalmente único) → Block all public access ✓ → Create bucket → <strong>Anote ARN e nome</strong></p></div></div>
+      <div class="step"><div class="step-num" style="background:#00A1C9">2</div><div class="step-body"><strong>Configurar Event Notification</strong><p>Bucket → Properties → Event notifications → Create event notification → Name: <code>s3-json-upload-to-sqs-seu-nome</code> → Suffix: <code>.json</code> → Event types: All object create events → Destination: SQS queue → <code>s3-arquivos-json-queue-seu-nome</code> → Save changes</p></div></div>
+    </div>
+    <div class="alert warn">
+      <span class="alert-icon">⚠️</span>
+      <span><strong>Erro comum:</strong> "Unable to validate the following destination configurations" — significa que o S3 não tem permissão para enviar para a fila SQS. Solução: adicione a política abaixo na fila SQS antes de configurar a notificação.</span>
+    </div>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – Política da fila SQS para receber do S3</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "Version": "2012-10-17",
+  "Id": "PolicyForS3ToSQS",
+  "Statement": [
+    {
+      "Sid": "AllowS3ToSendMessage",
+      "Effect": "Allow",
+      "Principal": {"Service": "s3.amazonaws.com"},
+      "Action": "SQS:SendMessage",
+      "Resource": "COLE AQUI O ARN DA SUA FILA s3-arquivos-json-queue-seu-nome",
+      "Condition": {
+        "ArnLike": {
+          "aws:SourceArn": "COLE AQUI O ARN DO SEU BUCKET datalake-arquivos-seu-nome"
+        },
+        "StringEquals": {
+          "aws:SourceAccount": "COLE AQUI O ID DA SUA CONTA"
+        }
+      }
+    }
+  ]
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">🧪</span> Arquivos de Teste</h3>
+    <p class="section-label">Arquivo válido – arquivo_com_pedidos.json</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – arquivo_com_pedidos.json</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "metadata_arquivo": {
+    "data_geracao": "2024-03-15",
+    "origem_lote": "sistema_X"
+  },
+  "lista_pedidos": [
+    {
+      "id_pedido_arquivo": "S3P001-seu-nome",
+      "id_cliente_arquivo": "S3C001",
+      "itens_pedido_arquivo": [
+        {"sku": "PROD-A", "qtd": 2},
+        {"sku": "PROD-B", "qtd": 1}
+      ]
+    },
+    {
+      "id_pedido_arquivo": "S3P002-seu-nome",
+      "id_cliente_arquivo": "S3C002",
+      "itens_pedido_arquivo": [
+        {"sku": "PROD-C", "qtd": 5}
+      ]
+    },
+    {
+      "id_pedido_arquivo_invalido": "S3P003-falta-cliente",
+      "itens_pedido_arquivo": [{"sku": "PROD-D", "qtd": 1}]
+    }
+  ]
+}</pre>
+    </div>
+    <p class="section-label">Arquivo inválido – arquivo_schema_invalido.json</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – arquivo_schema_invalido.json</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "alguma_outra_chave": "sem_lista_pedidos"
+}</pre>
+    </div>
+    <div class="alert success"><span class="alert-icon">✅</span><span>Após upload do arquivo válido: DynamoDB deve ter <code>statusValidacao: ARQUIVO_VALIDADO</code> e a fila FIFO do Dia 1 deve receber os pedidos S3P001 e S3P002.</span></div>
+    <div class="alert info"><span class="alert-icon">ℹ️</span><span>Após upload do arquivo inválido: DynamoDB deve ter <code>statusValidacao: ERRO_VALIDACAO_ARQUIVO</code> e você deve receber e-mail do SNS.</span></div>
+  </div>
+
+  <div class="conclusion">
+    <h3>✨ Conclusão do Dia 2</h3>
+    <ul>
+      <li>Configurar S3 para disparar eventos para SQS via Event Notifications</li>
+      <li>Desenvolver Lambda para processar arquivos, validar conteúdo e extrair pedidos</li>
+      <li>Rastrear processamento de arquivos em DynamoDB</li>
+      <li>Notificar erros de validação via SNS e-mail</li>
+      <li>Integrar segunda fonte de dados ao pipeline principal do Dia 1</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================== DIA 3 ============================== -->
+<div class="day-section" id="day3">
+  <div class="day-header d3">
+    <div class="day-num">03</div>
+    <div class="day-info">
+      <h2>Processamento Central de Pedidos e Persistência</h2>
+      <p>EventBridge Rule → SQS Standard → Lambda → DynamoDB (tabela principal pedidos-db)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#f3e5f5">📐</span> Arquitetura do Dia 3</h3>
+    <div class="arch-diagram">
+      <div class="arch-row"><span class="arch-service">EventBridge Bus</span><span class="arch-arrow">→ NovoPedidoValidado →</span><span class="arch-service">pedidos-pendentes-queue</span><span class="arch-arrow">→</span><span class="arch-service">processa-pedidos-lambda</span><span class="arch-arrow">→</span><span class="arch-service">pedidos-db (DynamoDB)</span></div>
+      <div class="arch-row"><span class="arch-label">Fontes: API (Dia 1) e S3 (Dia 2) → EventBridge → aqui</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">✅</span> Objetivos</h3>
+    <ul class="obj-list">
+      <li>Regra no EventBridge para rotear eventos NovoPedidoValidado</li>
+      <li>Fila SQS Standard como buffer de processamento principal</li>
+      <li>Lambda para executar lógica de processamento central</li>
+      <li>Tabela DynamoDB principal para armazenar pedidos processados</li>
+      <li>Conexão efetiva entre validação e persistência final</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e3f2fd">🗂</span> Recursos a Criar</h3>
+    <div class="res-grid">
+      <div class="res-item"><div class="res-type">IAM Role</div><div class="res-name">lambda-processa-pedidos-role-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SQS DLQ Standard</div><div class="res-name">pedidos-pendentes-dlq-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SQS Queue Standard</div><div class="res-name">pedidos-pendentes-queue-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">Lambda</div><div class="res-name">processa-pedidos-lambda-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">DynamoDB</div><div class="res-name">pedidos-db-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">EventBridge Rule</div><div class="res-name">novo-pedido-validado-rule-seu-nome</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e0f2f1">🔐</span> IAM Role – Processamento de Pedidos</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Crie com nome <code>lambda-processa-pedidos-role-seu-nome</code> com <code>AWSLambdaBasicExecutionRole</code>. Após criar SQS e DynamoDB, adicione a inline policy:</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – SQSReadDynamoWritePedidosDB-seu-nome</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes"
+      ],
+      "Resource": "COLE AQUI O ARN DA SUA FILA pedidos-pendentes-queue-seu-nome"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:GetItem"
+      ],
+      "Resource": "COLE AQUI O ARN DA SUA TABELA pedidos-db-seu-nome"
+    }
+  ]
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">📨</span> SQS Standard – Pedidos Pendentes</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#7B2FBE">1</div><div class="step-body"><strong>Criar DLQ</strong><p>Type: Standard → Name: <code>pedidos-pendentes-dlq-seu-nome</code> → Create queue → <strong>Anote o ARN</strong></p></div></div>
+      <div class="step"><div class="step-num" style="background:#7B2FBE">2</div><div class="step-body"><strong>Criar Fila Principal</strong><p>Type: Standard → Name: <code>pedidos-pendentes-queue-seu-nome</code> → Visibility timeout: <strong>70 segundos</strong> → DLQ: Enabled → ARN da DLQ → Max receives: 3 → Create queue → <strong>Anote ARN e URL</strong></p></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fce4ec">🗄️</span> DynamoDB – Tabela Principal de Pedidos</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#7B2FBE">1</div><div class="step-body"><strong>DynamoDB → Tables → Create table</strong><p>Table name: <code>pedidos-db-seu-nome</code> → Partition key: <code>pedidoId</code> (String) → Default settings → Create table → <strong>Anote o ARN</strong></p></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">⚡</span> Lambda – Processamento Central</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Function name: <code>processa-pedidos-lambda-seu-nome</code> | Runtime: Python 3.12 | Timeout: 60s</p>
+    <p class="section-label">Variável de ambiente</p>
+    <div class="env-grid"><div class="env-item"><div class="env-key">DYNAMODB_TABLE_NAME</div><div class="env-val">pedidos-db-seu-nome</div></div></div>
+    <p class="section-label">Trigger SQS</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Configuration → Triggers → Add trigger → SQS → <code>pedidos-pendentes-queue-seu-nome</code> → Batch size: 1 → Add</p>
+    <p class="section-label">Código – lambda_function.py</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">python – processa-pedidos-lambda</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>import json
+import os
+import boto3
+from datetime import datetime
+
+DYNAMODB_TABLE_NAME = os.environ['DYNAMODB_TABLE_NAME']
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table(DYNAMODB_TABLE_NAME)
+
+def lambda_handler(event, context):
+    print(f"Evento SQS (pedidos pendentes) recebido: {event}")
+    for record in event['Records']:
+        try:
+            eventbridge_event = json.loads(record['body'])
+            print(f"Evento EventBridge recebido via SQS: {eventbridge_event}")
+
+            if 'detail' not in eventbridge_event:
+                print(f"Erro: Campo 'detail' não encontrado no evento: {eventbridge_event}")
+                continue
+
+            pedido_data = eventbridge_event['detail']
+            print(f"Processando detalhes do pedido: {pedido_data}")
+            pedido_id = pedido_data.get('pedidoId')
+
+            if not pedido_id:
+                print(f"Erro: pedidoId não encontrado nos detalhes do evento: {pedido_data}")
+                continue
+
+            status_processamento = "PEDIDO_PROCESSADO"
+            print(f"Lógica de processamento para pedido {pedido_id} concluída (simulada).")
+
+            item_to_put = {
+                'pedidoId': str(pedido_id),
+                'clienteId': str(pedido_data.get('clienteId')),
+                'itens': pedido_data.get('itens', []),
+                'statusPedido': status_processamento,
+                'origem': pedido_data.get('origem', 'API'),
+                'nomeArquivoOriginal': pedido_data.get('nomeArquivoOriginal'),
+                'timestampCriacaoEvento': eventbridge_event.get(
+                    'time',
+                    pedido_data.get('timestamp', datetime.utcnow().isoformat() + "Z")
+                ),
+                'timestampProcessamento': datetime.utcnow().isoformat() + "Z"
+            }
+            item_final = {k: v for k, v in item_to_put.items() if v is not None}
+            table.put_item(Item=item_final)
+            print(f"Pedido {pedido_id} salvo no DynamoDB com status {status_processamento}.")
+
+        except json.JSONDecodeError as je:
+            print(f"Erro de JSON ao processar registro {record['messageId']}: {str(je)}")
+            raise je
+        except Exception as e:
+            pedido_id_para_log = 'N/A'
+            if 'pedido_data' in locals() and isinstance(pedido_data, dict):
+                pedido_id_para_log = pedido_data.get('pedidoId', 'N/A')
+            print(f"Erro geral ao processar registro {record['messageId']} (pedidoId: {pedido_id_para_log}): {str(e)}")
+            raise e
+
+    return {'statusCode': 200, 'body': 'Processamento de pedidos pendentes concluído'}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f4fd">🔀</span> EventBridge Rule – NovoPedidoValidado</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#7B2FBE">1</div><div class="step-body"><strong>EventBridge → Rules → Create rule</strong><p>Selecione o Event Bus: <code>pedidos-event-bus-seu-nome</code> → Name: <code>novo-pedido-validado-rule-seu-nome</code> → Rule type: Rule with an event pattern → Next</p></div></div>
+      <div class="step"><div class="step-num" style="background:#7B2FBE">2</div><div class="step-body"><strong>Event pattern</strong><p>Event source: AWS events or EventBridge partner events → Creation method: Custom patterns (JSON editor) → cole o padrão abaixo → Next</p></div></div>
+      <div class="step"><div class="step-num" style="background:#7B2FBE">3</div><div class="step-body"><strong>Target</strong><p>Target types: AWS service → Select a target: SQS queue → Queue: <code>pedidos-pendentes-queue-seu-nome</code> → Next → Create rule</p></div></div>
+    </div>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – event pattern</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "source": ["lab.aula1.pedidos.validacao"],
+  "detail-type": ["NovoPedidoValidado"]
+}</pre>
+    </div>
+    <div class="alert warn"><span class="alert-icon">⚠️</span><span>Os valores <code>source</code> e <code>detail-type</code> devem ser <strong>idênticos</strong> ao que a Lambda do Dia 1 publica. Qualquer diferença fará os eventos não serem capturados.</span></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">🧪</span> Teste Completo – Dia 3</h3>
+    <p class="section-label">1. Enviar pedido via API (Fluxo Dia 1)</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">bash – curl – pedido via API</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>curl -X POST &lt;INVOKE_URL&gt;/pedidos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pedidoId": "apiP001-seu-nome",
+    "clienteId": "clienteXYZ-seu-nome",
+    "itens": [
+      {"Item": "Produto X API", "qtd": 1}
+    ]
+  }'</pre>
+    </div>
+    <p class="section-label">2. Upload de arquivo no S3 (Fluxo Dia 2)</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – arquivo para upload no S3</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "metadata_arquivo": {"data_geracao": "2024-03-16"},
+  "lista_pedidos": [
+    {
+      "id_pedido_arquivo": "s3P003-seu-nome",
+      "id_cliente_arquivo": "clienteS3-ABC",
+      "itens_pedido_arquivo": [{"sku": "PROD-S3-001", "qtd": 10}]
+    }
+  ]
+}</pre>
+    </div>
+    <p class="section-label">3. Verificar no DynamoDB</p>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#7B2FBE">1</div><div class="step-body"><strong>DynamoDB → pedidos-db-seu-nome → Explore table items</strong><p>Esperado: <code>pedidoId: apiP001-seu-nome | statusPedido: PEDIDO_PROCESSADO | origem: API</code></p></div></div>
+      <div class="step"><div class="step-num" style="background:#7B2FBE">2</div><div class="step-body"><strong>Pedido do S3</strong><p>Esperado: <code>pedidoId: s3P003-seu-nome | statusPedido: PEDIDO_PROCESSADO | origem: S3_FILE</code></p></div></div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h3>✨ Conclusão do Dia 3</h3>
+    <ul>
+      <li>Criar regras no EventBridge para rotear eventos por padrão</li>
+      <li>Usar SQS como buffer entre EventBridge e Lambda</li>
+      <li>Desenvolver Lambda para consumir SQS e persistir no DynamoDB</li>
+      <li>Projetar tabela DynamoDB para dados de pedidos processados</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================== DIA 4 ============================== -->
+<div class="day-section" id="day4">
+  <div class="day-header d4">
+    <div class="day-num">04</div>
+    <div class="day-info">
+      <h2>Fluxos Adicionais, DLQs e Lambda Layers</h2>
+      <p>Cancelamento + Alteração de pedidos, teste prático de DLQs e arquitetura completa</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">📐</span> Arquitetura Final Completa</h3>
+    <div class="arch-diagram">
+      <div class="arch-row"><span style="color:rgba(255,153,0,.8);font-size:11px;font-family:monospace">── ENTRADA ─────────────────────────────────────────────────────</span></div>
+      <div class="arch-row"><span class="arch-service">API Gateway</span><span class="arch-arrow">→</span><span class="arch-service">pre-validacao-λ</span><span class="arch-arrow">→</span><span class="arch-service">SQS FIFO</span><span class="arch-arrow">→</span><span class="arch-service">validacao-λ</span></div>
+      <div class="arch-row"><span class="arch-service">S3 Bucket</span><span class="arch-arrow">→</span><span class="arch-service">SQS Standard</span><span class="arch-arrow">→</span><span class="arch-service">validacao-s3-λ</span></div>
+      <div class="arch-row"><span style="color:rgba(255,153,0,.8);font-size:11px;font-family:monospace">── ROTEAMENTO ──────────────────────────────────────────────────</span></div>
+      <div class="arch-row"><span class="arch-service">EventBridge Bus</span><span class="arch-arrow">→ NovoPedidoValidado →</span><span class="arch-service">pedidos-pendentes-queue</span><span class="arch-arrow">→</span><span class="arch-service">processa-λ → DynamoDB</span></div>
+      <div class="arch-row"><span class="arch-service">EventBridge Bus</span><span class="arch-arrow">→ CancelarPedido →</span><span class="arch-service">cancela-queue</span><span class="arch-arrow">→</span><span class="arch-service">cancela-λ → DynamoDB</span></div>
+      <div class="arch-row"><span class="arch-service">EventBridge Bus</span><span class="arch-arrow">→ AlterarPedido →</span><span class="arch-service">altera-queue</span><span class="arch-arrow">→</span><span class="arch-service">altera-λ → DynamoDB</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">✅</span> Objetivos</h3>
+    <ul class="obj-list">
+      <li>Fluxos de cancelamento e alteração integrados à arquitetura</li>
+      <li>Novas regras EventBridge, filas SQS e Lambdas dedicadas</li>
+      <li>Compreensão prática de Dead Letter Queues (DLQs)</li>
+      <li>Visão completa da arquitetura integrada e funcional</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e3f2fd">🗂</span> Recursos a Criar</h3>
+    <div class="res-grid">
+      <div class="res-item"><div class="res-type">IAM Role</div><div class="res-name">lambda-altera-cancela-role-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SQS DLQ</div><div class="res-name">cancela-pedido-dlq-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SQS Queue</div><div class="res-name">cancela-pedido-queue-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">Lambda</div><div class="res-name">cancela-pedido-lambda-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SQS DLQ</div><div class="res-name">altera-pedido-dlq-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">SQS Queue</div><div class="res-name">altera-pedido-queue-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">Lambda</div><div class="res-name">altera-pedido-lambda-seu-nome</div></div>
+      <div class="res-item"><div class="res-type">EventBridge Rules</div><div class="res-name">cancela-pedido-rule + altera-pedido-rule</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e0f2f1">🔐</span> IAM Role – Alteração/Cancelamento</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Crie com nome <code>lambda-altera-cancela-role-seu-nome</code>. Adicione as políticas inline conforme cria cada fila.</p>
+    <p class="section-label">Permissão SQS – Cancelamento (SQSReadCancelaTrigger-seu-nome)</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["sqs:ReceiveMessage","sqs:DeleteMessage","sqs:GetQueueAttributes"],
+      "Resource": ["COLE AQUI O ARN DA SUA FILA cancela-pedido-queue-seu-nome"]
+    }
+  ]
+}</pre>
+    </div>
+    <p class="section-label">Permissão SQS – Alteração (SQSReadAlteraTrigger-seu-nome)</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["sqs:ReceiveMessage","sqs:DeleteMessage","sqs:GetQueueAttributes"],
+      "Resource": ["COLE AQUI O ARN DA SUA FILA altera-pedido-queue-seu-nome"]
+    }
+  ]
+}</pre>
+    </div>
+    <p class="section-label">Permissão DynamoDB (ReadCancelAlterDynamoUpdate-seu-nome)</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["dynamodb:UpdateItem","dynamodb:GetItem"],
+      "Resource": "COLE AQUI O ARN DA SUA TABELA pedidos-db-seu-nome"
+    }
+  ]
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">⚡</span> Lambda – Cancelamento de Pedido</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Function name: <code>cancela-pedido-lambda-seu-nome</code> | Runtime: Python 3.12 | Timeout: 60s | Role: lambda-altera-cancela-role-seu-nome</p>
+    <p class="section-label">Variável de ambiente</p>
+    <div class="env-grid"><div class="env-item"><div class="env-key">DYNAMODB_TABLE_NAME</div><div class="env-val">pedidos-db-seu-nome</div></div></div>
+    <p class="section-label">Trigger SQS: cancela-pedido-queue-seu-nome | Batch size: 1</p>
+    <p class="section-label">Código – lambda_function.py</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">python – cancela-pedido-lambda</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>import json
+import os
+import boto3
+from datetime import datetime
+
+DYNAMODB_TABLE_NAME = os.environ['DYNAMODB_TABLE_NAME']
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table(DYNAMODB_TABLE_NAME)
+
+def lambda_handler(event, context):
+    print(f"Evento SQS (cancelamento) recebido: {event}")
+    for record in event['Records']:
+        pedido_id = None
+        try:
+            eventbridge_event = json.loads(record['body'])
+            print(f"Evento EventBridge recebido via SQS: {eventbridge_event}")
+
+            if 'detail' not in eventbridge_event:
+                print(f"Erro: Campo 'detail' não encontrado: {eventbridge_event}")
+                continue
+
+            pedido_data = eventbridge_event['detail']
+            pedido_id = pedido_data.get('pedidoId')
+            if not pedido_id:
+                print(f"Erro: pedidoId não encontrado: {pedido_data}")
+                continue
+
+            print(f"Processando cancelamento para pedido: {pedido_id}")
+            response = table.update_item(
+                Key={'pedidoId': str(pedido_id)},
+                UpdateExpression="SET statusPedido = :status, timestampAtualizacao = :ts",
+                ExpressionAttributeValues={
+                    ':status': 'CANCELADO',
+                    ':ts': datetime.utcnow().isoformat() + "Z"
+                },
+                ReturnValues="UPDATED_NEW"
+            )
+            print(f"Pedido {pedido_id} atualizado para CANCELADO. Resposta: {response}")
+
+        except json.JSONDecodeError as je:
+            print(f"Erro de JSON ao processar registro {record['messageId']}: {str(je)}")
+            raise je
+        except Exception as e:
+            print(f"Erro geral ao processar cancelamento {record['messageId']} (pedidoId: {pedido_id}): {str(e)}")
+            raise e
+
+    return {'statusCode': 200, 'body': 'Processamento de cancelamentos concluído'}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fff3e0">⚡</span> Lambda – Alteração de Pedido</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:4px">Function name: <code>altera-pedido-lambda-seu-nome</code> | Runtime: Python 3.12 | Timeout: 60s | Role: lambda-altera-cancela-role-seu-nome</p>
+    <p class="section-label">Variável de ambiente</p>
+    <div class="env-grid"><div class="env-item"><div class="env-key">DYNAMODB_TABLE_NAME</div><div class="env-val">pedidos-db-seu-nome</div></div></div>
+    <p class="section-label">Trigger SQS: altera-pedido-queue-seu-nome | Batch size: 1</p>
+    <p class="section-label">Código – lambda_function.py</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">python – altera-pedido-lambda</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>import json
+import os
+import boto3
+from datetime import datetime
+
+DYNAMODB_TABLE_NAME = os.environ['DYNAMODB_TABLE_NAME']
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table(DYNAMODB_TABLE_NAME)
+
+def lambda_handler(event, context):
+    print(f"Evento SQS (alteração) recebido: {event}")
+    for record in event['Records']:
+        pedido_id = None
+        try:
+            eventbridge_event = json.loads(record['body'])
+            print(f"Evento EventBridge recebido via SQS: {eventbridge_event}")
+
+            if 'detail' not in eventbridge_event:
+                print(f"Erro: Campo 'detail' não encontrado: {eventbridge_event}")
+                continue
+
+            pedido_data = eventbridge_event['detail']
+            pedido_id = pedido_data.get('pedidoId')
+            novos_itens = pedido_data.get('novosItens')
+
+            if not pedido_id or novos_itens is None:
+                print(f"Erro: pedidoId ou novosItens não encontrados: {pedido_data}")
+                continue
+
+            print(f"Processando alteração para pedido: {pedido_id} com novos itens: {novos_itens}")
+            response = table.update_item(
+                Key={'pedidoId': str(pedido_id)},
+                UpdateExpression="SET itens = :i, statusPedido = :s, timestampAtualizacao = :ts",
+                ExpressionAttributeValues={
+                    ':i': novos_itens,
+                    ':s': 'ALTERADO',
+                    ':ts': datetime.utcnow().isoformat() + "Z"
+                },
+                ReturnValues="UPDATED_NEW"
+            )
+            print(f"Pedido {pedido_id} atualizado para ALTERADO. Resposta: {response}")
+
+        except json.JSONDecodeError as je:
+            print(f"Erro de JSON ao processar registro {record['messageId']}: {str(je)}")
+            raise je
+        except Exception as e:
+            print(f"Erro geral ao processar alteração {record['messageId']} (pedidoId: {pedido_id}): {str(e)}")
+            raise e
+
+    return {'statusCode': 200, 'body': 'Processamento de alterações concluído'}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#f3e5f5">⚙️</span> EventBridge Rules – Cancelamento e Alteração</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Para cada rule: EventBridge → Rules → Event Bus: <code>pedidos-event-bus-seu-nome</code> → Create rule → Rule with an event pattern → Custom patterns (JSON editor)</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px">cancela-pedido-rule-seu-nome → Target: cancela-pedido-queue</p>
+        <div class="code-block"><div class="code-header"><span class="code-lang">json</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div><pre>{
+  "source": ["lab.aula4.operacoes"],
+  "detail-type": ["CancelarPedido"]
+}</pre></div>
+      </div>
+      <div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px">altera-pedido-rule-seu-nome → Target: altera-pedido-queue</p>
+        <div class="code-block"><div class="code-header"><span class="code-lang">json</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div><pre>{
+  "source": ["lab.aula4.operacoes"],
+  "detail-type": ["AlterarPedido"]
+}</pre></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fce4ec">🧪</span> Teste – Cancelar Pedido via Console EventBridge</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">EventBridge → Event buses → <code>pedidos-event-bus-seu-nome</code> → Send events</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – cancelar pedido</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>Event source:  lab.aula4.operacoes
+Detail type:   CancelarPedido
+Event detail:
+{
+  "pedidoId": "apiP001-seu-nome"
+}</pre>
+    </div>
+    <div class="alert success"><span class="alert-icon">✅</span><span>No DynamoDB: <code>statusPedido</code> deve ser <strong>CANCELADO</strong> e <code>timestampAtualizacao</code> atualizado.</span></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#e8f5e9">🧪</span> Teste – Alterar Pedido via Console EventBridge</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">json – alterar pedido</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>Event source:  lab.aula4.operacoes
+Detail type:   AlterarPedido
+Event detail:
+{
+  "pedidoId": "apiP001-seu-nome",
+  "novosItens": [
+    {"sku": "PROD-ALTERADO-1", "qtd": 1},
+    {"sku": "PROD-ALTERADO-2", "qtd": 99}
+  ]
+}</pre>
+    </div>
+    <div class="alert success"><span class="alert-icon">✅</span><span>No DynamoDB: <code>statusPedido</code> deve ser <strong>ALTERADO</strong> e os itens atualizados.</span></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="card-icon" style="background:#fdecea">💀</span> Teste de DLQ – Forçar Erro</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#e53935">1</div><div class="step-body"><strong>Edite a Lambda processa-pedidos-lambda-seu-nome</strong><p>Aba Code → adicione no início da função <code>lambda_handler</code>:</p></div></div>
+    </div>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">python – erro forçado</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>raise ValueError("Teste Forçado para DLQ!")</pre>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#e53935">2</div><div class="step-body"><strong>Clique em Deploy e envie um novo pedido pela API</strong><p>Use o curl do Dia 1 com um novo <code>pedidoId</code> como <code>apiP0043-TESTE-FLUXO-AULA-4</code></p></div></div>
+      <div class="step"><div class="step-num" style="background:#e53935">3</div><div class="step-body"><strong>Verifique a DLQ pedidos-pendentes-dlq-seu-nome</strong><p>SQS → pedidos-pendentes-dlq-seu-nome → Send and receive messages → Poll for messages → a mensagem estará lá após 3 tentativas falhas</p></div></div>
+      <div class="step"><div class="step-num" style="background:#1D8348">4</div><div class="step-body"><strong>Restaure a Lambda</strong><p><span style="color:#c62828;font-weight:500">⚠️ IMPORTANTE:</span> Remova o <code>raise ValueError</code> e clique em <strong>Deploy</strong> novamente para restaurar o funcionamento normal!</p></div></div>
+    </div>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">bash – curl – teste DLQ</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+      <pre>curl -X POST &lt;INVOKE_URL&gt;/pedidos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pedidoId": "apiP0043-TESTE-FLUXO-AULA-4",
+    "clienteId": "clienteAPI-TRE-seu-nome",
+    "itens": [
+      {"item": "Produto X API", "qtd": 1}
+    ]
+  }'</pre>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h3>🎉 Conclusão Geral – Semana do Desenvolvedor AWS</h3>
+    <ul>
+      <li><strong>Dia 1:</strong> API Gateway + Lambda + SQS FIFO + EventBridge</li>
+      <li><strong>Dia 2:</strong> S3 + SQS Standard + Lambda + DynamoDB + SNS</li>
+      <li><strong>Dia 3:</strong> EventBridge Rules + SQS + Lambda + DynamoDB (persistência final)</li>
+      <li><strong>Dia 4:</strong> Cancelamento + Alteração + DLQs em ação</li>
+      <li>Arquitetura serverless, orientada a eventos, desacoplada e com múltiplas fontes de dados</li>
+      <li>Serviços utilizados: Lambda, API Gateway, SQS, EventBridge, S3, DynamoDB, SNS, IAM, CloudWatch</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<script>
+function showDay(n, btn) {
+  document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('day' + n).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = '✓ copiado';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
